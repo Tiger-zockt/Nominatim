@@ -70,7 +70,7 @@ if($content == "[]"){
                     <h1>${data[i].name}:</h1>
                     <h2>Art des Ortes: Dorf</h2>
                     <h2>Postleitzahl: ${data[i]["address"].postcode}</h2>
-                    <h2>Stadt: ${data[i]["address"].town}</h2>
+                    <h2>Stadt: ${data[i]["address"].town || ""}</h2>
                     <h2>Landkreis: ${data[i]["address"].county}</h2>
                     <h2>Bundesland: ${data[i]["address"].state}</h2>
                     <h2>Land: ${data[i]["address"].country}</h2> 
@@ -255,7 +255,9 @@ if($content == "[]"){
                 <section>
                 <tr>`
             }
-            results.innerHTML += row
+            if (!row == ""){
+                results.innerHTML += row
+            }           
         }
     </script>
 </body>
