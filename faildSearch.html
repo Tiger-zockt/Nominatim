@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find a Place</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="card"> 
+    <h1>Es gibt kein ergebnis zu <strong id="output"></strong>!</h1>
+    <h2>Kein Eintrag zu diesem ort gefunden.</h2>
+    <form action="search.php" method="post">
+      <h1>Suche:</h1>
+
+      <input type="text" id="fill" name="placeSearched" placeholder="Name des ortes" required>
+
+      <button type="submit">Suche</button>
+  </form>
+  </section>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const place = urlParams.get("place");
+    document.getElementById("output").textContent = place;
+    document.getElementById("fill").value = place;
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+.card{
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    border: 2px solid gray;
+    border-radius: 16px;
+    gap: 16px;
+    background: lightyellow;
+    margin: 5%;
+    color: black;
+}
+.place_card{
+    display:grid;
+    flex-direction: row;
+    padding: 32px;
+    border: 2px solid gray;
+    border-radius: 16px;
+    background: lightyellow;
+    color: black;
+    margin: 10px;
+}

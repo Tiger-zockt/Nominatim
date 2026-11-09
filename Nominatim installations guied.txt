@@ -1,0 +1,115 @@
+Nominatim installations guied
+
+1. sudo apt-get update -qq
+
+2. sudo apt-get install -y osm2pgsql postgresql-17-postgis-3 postgresql-17-postgis-3-scripts \
+pkg-config libicu-dev virtualenv
+                    
+3. sudo useradd -d /srv/nominatim -s /bin/bash -m nominatim
+
+4. sudo -u nominatim bash
+
+Schritt 5 und 6 als User nominatim
+
+5. export USERNAME=nominatim
+export USERHOME=/srv/nominatim
+
+6. chmod a+x $USERHOME
+
+7. sudo systemctl restart postgresql
+
+8. export USERNAME=nominatim
+export USERHOME=/srv/nominatim
+
+9. sudo -u postgres createuser -s $USERNAME
+sudo -u postgres createuser www-data
+
+10. export USERNAME=nominatim
+export USERHOME=/srv/nominatim
+
+11. virtualenv $USERHOME/nominatim-venv
+
+12. $USERHOME/nominatim-venv/bin/pip install psycopg[binary]
+
+13. $USERHOME/nominatim-venv/bin/pip install nominatim-db
+
+Schritte 14-19 als User nominatim
+
+14. export USERHOME=/srv/nominatim
+
+15. . $USERHOME/nominatim-venv/bin/activate
+
+16. mkdir ~/nominatim-project
+cd ~/nominatim-project
+
+Zusätzliche configurationen möglich docs: https://nominatim.org/release-docs/latest/admin/Import/
+
+Nicht zwingend nötig: nur für UK und USA.
+( get https://nominatim.org/data/gb_postcodes.csv.gz
+wget https://nominatim.org/data/us_postcodes.csv.gz )
+
+17. Download die Karte von https://download.geofabrik.de/ und wähle das Gebiet aus.
+
+18. nominatim import --osm-file <data file> 2>&1 | tee setup.log
+<data file> muss durch den Namen der gedownloadeten Datei ersetzt werden.
+
+19. checke hier mit ob alles richtig configurit ist.
+nominatim admin --check-database 
+
+20. export USERNAME=nominatim
+export USERHOME=/srv/nominatim
+
+21. $USERHOME/nominatim-venv/bin/pip install falcon uvicorn gunicorn nominatim-api
+
+22. sudo tee /etc/systemd/system/nominatim.socket << EOFSOCKETSYSTEMD
+[Unit]
+Description=Gunicorn socket for Nominatim
+
+[Socket]
+ListenStream=/run/nominatim.sock
+SocketUser=www-data
+
+[Install]
+WantedBy=multi-user.target
+EOFSOCKETSYSTEMD
+
+23. sudo tee /etc/systemd/system/nominatim.service << EOFNOMINATIMSYSTEMD
+[Unit]
+Description=Nominatim running as a gunicorn application
+After=network.target
+Requires=nominatim.socket
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=$USERHOME/nominatim-project
+ExecStart=$USERHOME/nominatim-venv/bin/gunicorn -b unix:/run/nominatim.sock -w 4 -k uvicorn.workers.UvicornWorker "nominatim_api.server.falcon.server:run_wsgi()"
+ExecReload=/bin/kill -s HUP \$MAINPID
+PrivateTmp=true
+TimeoutStopSec=5
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
+EOFNOMINATIMSYSTEMD
+
+24. sudo systemctl daemon-reload
+sudo systemctl enable nominatim.socket
+sudo systemctl start nominatim.socket
+sudo systemctl enable nominatim.service
+
+25. sudo apt-get install -y apache2
+sudo a2enmod proxy_http
+
+26. sudo tee /etc/apache2/conf-available/nominatim.conf << EOFAPACHECONF
+
+ProxyPass /nominatim "unix:/run/nominatim.sock|http://localhost/"
+EOFAPACHECONF
+
+27. sudo a2enconf nominatim
+sudo systemctl restart apache2
+
+28. http://localhost/nominatim/status im besten falle sollte ein ok in der oberen linken ecke stehen wenn nicht ich irgend wo ein Fehler.
+
+29. http://localhost/nominatim/ über diese addresse kann indem man die URL modifizieren mit Parameter von https://nominatim.org/release-docs/latest/api/Overview/ .
