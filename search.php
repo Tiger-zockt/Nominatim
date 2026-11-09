@@ -49,7 +49,7 @@ if($content == "[]"){
         console.log(data)
         var results = document.getElementById("results");
         for (var i = 0; i < data.length; i++){
-            if (data[i]["addresstype"] == "statistical" || data[i]["addresstype"] == "railway" || data[i]["type"] == "administrative"){
+            if (data[i]["addresstype"] == "statistical" || data[i]["addresstype"] == "railway"){
                 console.log(data[i]["addresstype"])
             }else if (data[i]["addresstype"] == "hamlet"){
                 var row = `<tr>
