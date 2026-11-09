@@ -15,8 +15,8 @@ $status = curl_getinfo($curl,CURLINFO_HTTP_CODE);
 $encoded_content = json_encode($content);
 curl_reset($curl);
 
-if($status == 404){
-  header("Location: noNominatim.html");
+if($status >= 400){
+  header("Location: noNominatim.html?error=" . urlencode($status));
 };
 
 if($content == "[]"){
@@ -35,7 +35,7 @@ if($content == "[]"){
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <center><h1>Ergebnis der Suche</h1></center>
+    <center><h1>Ergebnis der Suche zu <strong id="place"></strong></h1></center>
     <tabel id="results">
 
     </tabel>
@@ -43,6 +43,8 @@ if($content == "[]"){
         <button type="submit">Zurück zur Suche</button>
     </form>
     <script>
+        var place = "<?php echo $place; ?>";
+        document.getElementById("place").textContent = place;
         var data = <?php echo $content; ?>;
         console.log(data)
         var results = document.getElementById("results");
@@ -183,6 +185,19 @@ if($content == "[]"){
                     <h1>${data[i].name}:</h1>
                     <h2>Art des Ortes: Stadtteil</h2>
                     <h2>Stadt: ${data[i]["address"].city}</h2>
+                    <h2>Landkreis: ${data[i]["address"].county}</h2>
+                    <h2>Bundesland: ${data[i]["address"].state}</h2>
+                    <h2>Land: ${data[i]["address"].country}</h2>
+                    <a href = "https://www.google.com/maps/place/${data[i].name}/">Auf Google Maps zeigen</a></td>
+                <section> 
+                <tr>`
+            }else if (data[i]["addresstype"] == "neighbourhood"){
+                var row = `<tr>
+                <section class="place_card"> 
+                    <h1>${data[i].name}:</h1>
+                    <h2>Art des Ortes: Nachbarschaft</h2>
+                    <h2>Stadtteil: ${data[i]["address"].suburb || "Nicht vorhanden"}</h2>
+                    <h2>Stadt: ${data[i]["address"].city || data[i]["address"].town}</h2>
                     <h2>Landkreis: ${data[i]["address"].county}</h2>
                     <h2>Bundesland: ${data[i]["address"].state}</h2>
                     <h2>Land: ${data[i]["address"].country}</h2>

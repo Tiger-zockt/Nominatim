@@ -10,9 +10,15 @@
 <body>
   <section class="card"> 
     <h1>Es konte keine verbindung zu Nominatim Hergestelt werden!<h1>
+    <h2>Fehlercode: <strong id="errorcode"></strong></h2>
     <h2>Versuchen sie es später nochmal. <form action="index.html" method="post">
-        <button type="submit">Zurück zur Suche</button>
+      <button type="submit">Zurück zur Suche</button>
     </form></h>
   </section>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const place = urlParams.get("error");
+    document.getElementById("errorcode").textContent = place;
+  </script>
 </body>
 </html>
