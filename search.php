@@ -57,7 +57,7 @@ if($content == "[]"){
                     <h1>${data[i].name}:</h1>
                     <h2>Art des Ortes: Kleine Siedlung</h2>
                     <h2>Postleitzahl: ${data[i]["address"].postcode}</h2>
-                    <h2>Dorf/Stadt: ${data[i]["address"].village || "Nicht bekannt"}</h2>
+                    <h2>Dorf/Stadt: ${data[i]["address"].village || data[i]["address"].town ||"Nicht bekannt"}</h2>
                     <h2>Landkreis: ${data[i]["address"].county}</h2>
                     <h2>Bundesland: ${data[i]["address"].state}</h2>
                     <h2>Land: ${data[i]["address"].country}</h2>
