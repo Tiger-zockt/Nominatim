@@ -201,7 +201,7 @@ if($content == "[]"){
                     <h2>Landkreis: ${data[i]["address"].county}</h2>
                     <h2>Bundesland: ${data[i]["address"].state}</h2>
                     <h2>Land: ${data[i]["address"].country}</h2>
-                    <a href = "https://www.google.com/maps/place/${data[i].name}/">Auf Google Maps zeigen</a></td>
+                    <a href = "https://www.google.com/maps/place/maps/@${data[i].lat},${data[i].lon},1600m/">Auf Google Maps zeigen</a></td>
                 <section> 
                 <tr>`
             }else if (data[i]["addresstype"] == "suburb"){
@@ -225,7 +225,7 @@ if($content == "[]"){
                     <h2>Landkreis: ${data[i]["address"].county || "Nicht vorhanden"}</h2>
                     <h2>Bundesland: ${data[i]["address"].state || "Nicht vorhanden"}</h2>
                     <h2>Land: ${data[i]["address"].country}</h2>
-                    <a href = "https://www.google.com/maps/@${data[i].lat},${data[i].lon},50m/">Auf Google Maps zeigen</a></td>
+                    <a href = "https://www.google.com/maps/@${data[i].lat},${data[i].lon},500m/">Auf Google Maps zeigen</a></td>
                 <section> 
                 <tr>`
             }else if (data[i]["type"] == "bus_stop"){
