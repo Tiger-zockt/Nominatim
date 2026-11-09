@@ -67,7 +67,7 @@ if($content == "[]"){
             }else if(data[i]["addresstype"] == "village"){
                 var row = `<tr>
                 <section class="place_card"> 
-                    <h1>${data[i].name}:</h1>
+                    <h1>${data[i].name}</h1>
                     <h2>Art des Ortes: Dorf</h2>
                     <h2>Postleitzahl: ${data[i]["address"].postcode}</h2>
                     <h2>Stadt: ${data[i]["address"].town || ""}</h2>
